@@ -3,7 +3,7 @@
 #include "glm/fwd.hpp"
 #include "lve_window.hpp"
 #include "lve_pipeline.hpp"
-#include "lve_model.hpp"
+#include "lve_game_object.hpp"
 #include "lve_device.hpp"
 #include "lve_swap_chain.hpp"
 #include "vulkan/vulkan_core.h"
@@ -27,7 +27,7 @@ public:
 	LveApp &operator=(const LveApp&) = delete;
 
 private:
-	void loadModels();
+	void loadGameObjects();
 	void createPipelineLayout();
 	void createPipeline();
 	void createCommandBuffers();
@@ -35,6 +35,7 @@ private:
 	void recreateSwapChain();
 	void recordCommandBuffer(int imageIndex);
 	void freeCommandBuffers();
+	void renderGameObjects(VkCommandBuffer commandBuffer);
 	
 
 	LveWindow lveWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
@@ -43,7 +44,7 @@ private:
 	std::unique_ptr<LvePipeline> lvePipeline;
 	VkPipelineLayout pipelineLayout;
 	std::vector<VkCommandBuffer> commandBuffers;
-	std::unique_ptr<LveModel> lveModel;
+	std::vector<LveGameObject> gameObjects;
 	// LvePipeline lvePipeline{lveDevice, "shaders/simple.vert.spv", "shaders/simple.frag.spv", LvePipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
 };
 
