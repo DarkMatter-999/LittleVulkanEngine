@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glm/fwd.hpp"
 #include "lve_window.hpp"
 #include "lve_pipeline.hpp"
 #include "lve_model.hpp"

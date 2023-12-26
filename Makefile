@@ -10,10 +10,11 @@ OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRC_FILES))
 SHADER_FILES = $(wildcard shaders/*.vert shaders/*.frag)
 SPV_FILES = $(patsubst shaders/%.vert,$(BUILD_DIR)/shaders/%.vert.spv,$(SHADER_FILES)) \
             $(patsubst shaders/%.frag,$(BUILD_DIR)/shaders/%.frag.spv,$(SHADER_FILES))
+TARGET = lve
 
-lve: $(OBJ_FILES) 
+$(TARGET): $(OBJ_FILES) $(SPV_FILES)
 	mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/lve $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$(TARGET) $(OBJ_FILES) $(LDFLAGS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	mkdir -p $(BUILD_DIR)
