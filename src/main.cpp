@@ -3,10 +3,10 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "app.hpp"
+#include "lve_app.hpp"
 
 int main() {
-    lve::FirstApp app{};
+    lve::LveApp app{};
 
     try {
 	app.run();

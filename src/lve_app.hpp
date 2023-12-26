@@ -12,18 +12,18 @@
 
 namespace lve {
 
-class FirstApp {
+class LveApp {
 public:
 	static constexpr int WIDTH = 800;
 	static constexpr int HEIGHT = 600;
 
 	void run();
 
-	FirstApp();
-	~FirstApp();
+	LveApp();
+	~LveApp();
 
-	FirstApp(const FirstApp&) = delete;
-	FirstApp &operator=(const FirstApp&) = delete;
+	LveApp(const LveApp&) = delete;
+	LveApp &operator=(const LveApp&) = delete;
 
 private:
 	void loadModels();

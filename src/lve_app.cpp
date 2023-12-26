@@ -1,4 +1,4 @@
-#include "app.hpp"
+#include "lve_app.hpp"
 #include "GLFW/glfw3.h"
 #include "lve_pipeline.hpp"
 #include "lve_swap_chain.hpp"
@@ -9,16 +9,16 @@
 
 namespace lve {
 
-FirstApp::FirstApp() {
+LveApp::LveApp() {
 	loadModels();
 	createPipelineLayout();
 	recreateSwapChain();
 	createCommandBuffers();
 }
 
-FirstApp::~FirstApp() { vkDestroyPipelineLayout(lveDevice.device(), pipelineLayout, nullptr); }
+LveApp::~LveApp() { vkDestroyPipelineLayout(lveDevice.device(), pipelineLayout, nullptr); }
 
-void FirstApp::run() {
+void LveApp::run() {
 	while (!lveWindow.shouldClose()) {
 		glfwPollEvents();
 		drawFrame();
@@ -27,7 +27,7 @@ void FirstApp::run() {
 	vkDeviceWaitIdle(lveDevice.device());
 }
 
-void FirstApp::createPipelineLayout() {
+void LveApp::createPipelineLayout() {
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -41,7 +41,7 @@ void FirstApp::createPipelineLayout() {
 	}
 }
 
-void FirstApp::createPipeline() {
+void LveApp::createPipeline() {
 	assert(lveSwapChain != nullptr && "Cannot create pipeline before swap chain");
 	assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
@@ -53,7 +53,7 @@ void FirstApp::createPipeline() {
 	lvePipeline = std::make_unique<LvePipeline>(lveDevice,"shaders/simple.vert.spv","shaders/simple.frag.spv",pipelineConfig);
 }
 
-void FirstApp::createCommandBuffers() {
+void LveApp::createCommandBuffers() {
 	commandBuffers.resize(lveSwapChain->imageCount());
 
 	VkCommandBufferAllocateInfo allocateInfo{};
@@ -68,7 +68,7 @@ void FirstApp::createCommandBuffers() {
 
 }
 
-void FirstApp::recreateSwapChain() {
+void LveApp::recreateSwapChain() {
 	auto extent = lveWindow.getExtent();
 	while(extent.width == 0 || extent.height == 0) {
 		extent = lveWindow.getExtent();
@@ -88,7 +88,7 @@ void FirstApp::recreateSwapChain() {
 	createPipeline();
 }
 
-void FirstApp::recordCommandBuffer(int imageIndex) {
+void LveApp::recordCommandBuffer(int imageIndex) {
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -138,12 +138,12 @@ void FirstApp::recordCommandBuffer(int imageIndex) {
 	}
 }
 
-void FirstApp::freeCommandBuffers() {
+void LveApp::freeCommandBuffers() {
 	vkFreeCommandBuffers(lveDevice.device(), lveDevice.getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 	commandBuffers.clear();
 }
 
-void FirstApp::drawFrame() {
+void LveApp::drawFrame() {
 	uint32_t imageIndex;
 	auto result = lveSwapChain->acquireNextImage(&imageIndex);
 
@@ -169,7 +169,7 @@ void FirstApp::drawFrame() {
 	}
 }
 
-void FirstApp::loadModels() {
+void LveApp::loadModels() {
 	std::vector<LveModel::Vertex> vertices{
 		{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}}, 
 		{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}}, 
