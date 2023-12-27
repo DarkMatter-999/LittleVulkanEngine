@@ -27,6 +27,8 @@ LveApp::~LveApp() { }
 void LveApp::run() {
 	LveRenderSystem simpleRenderSystem{lveDevice, lveRenderer.getSwapChainRenderPass()};
 	LveCamera camera{};
+	// camera.setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 4.0f));
+	camera.setViewTarget(glm::vec3(-1.f, -2.f, 0.f) , glm::vec3(0.0f, 0.0f, 4.5f));
 
 	while (!lveWindow.shouldClose()) {
 		glfwPollEvents();
