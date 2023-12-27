@@ -37,6 +37,8 @@ public:
 	void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
 	void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
 
+	float getAspectRatio() const { return lveSwapChain->extentAspectRatio(); }
+
 private:
 	void createCommandBuffers();
 	void recreateSwapChain();

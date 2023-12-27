@@ -2,9 +2,10 @@
 
 #include "glm/fwd.hpp"
 #include "lve_pipeline.hpp"
-#include "lve_game_object.hpp"
 #include "lve_device.hpp"
 #include "lve_renderer.hpp"
+#include "lve_game_object.hpp"
+#include "lve_camera.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include <memory>
@@ -20,7 +21,7 @@ public:
 	LveRenderSystem(const LveRenderSystem&) = delete;
 	LveRenderSystem &operator=(const LveRenderSystem&) = delete;
 
-	void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<LveGameObject>& gameObjects);
+	void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<LveGameObject>& gameObjects, const LveCamera &camera);
 private:
 	void createPipelineLayout();
 	void createPipeline(VkRenderPass renderPass);
