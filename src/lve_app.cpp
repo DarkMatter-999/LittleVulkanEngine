@@ -6,11 +6,13 @@
 #include "lve_game_object.hpp"
 #include "lve_renderer.hpp"
 #include "lve_render_system.hpp"
+#include "lve_input.hpp"
 #include "vulkan/vulkan_core.h"
 #include <cstdint>
 #include <ctime>
 #include <stdexcept>
 #include <array>
+#include <chrono>
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
@@ -27,11 +29,21 @@ LveApp::~LveApp() { }
 void LveApp::run() {
 	LveRenderSystem simpleRenderSystem{lveDevice, lveRenderer.getSwapChainRenderPass()};
 	LveCamera camera{};
-	// camera.setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 4.0f));
-	camera.setViewTarget(glm::vec3(-1.f, -2.f, 0.f) , glm::vec3(0.0f, 0.0f, 4.5f));
+
+	auto viewerObject = LveGameObject::createGameObject();
+	LveKeyboardMovementController cameraController{};
+
+	auto currentTime = std::chrono::high_resolution_clock::now();
 
 	while (!lveWindow.shouldClose()) {
 		glfwPollEvents();
+
+		auto newTime = std::chrono::high_resolution_clock::now();
+		float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+		currentTime = newTime;
+
+		cameraController.moveInPlaneXZ(lveWindow.getGLFWwindow(), frameTime, viewerObject);
+		camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 		
 		float aspect = lveRenderer.getAspectRatio();
 		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
