@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/fwd.hpp"
+#include "lve_frame_info.hpp"
 #include "lve_pipeline.hpp"
 #include "lve_device.hpp"
 #include "lve_renderer.hpp"
@@ -21,7 +22,7 @@ public:
 	LveRenderSystem(const LveRenderSystem&) = delete;
 	LveRenderSystem &operator=(const LveRenderSystem&) = delete;
 
-	void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<LveGameObject>& gameObjects, const LveCamera &camera);
+	void renderGameObjects(FrameInfo& frameInfo, std::vector<LveGameObject>& gameObjects, const LveCamera &camera);
 private:
 	void createPipelineLayout();
 	void createPipeline(VkRenderPass renderPass);

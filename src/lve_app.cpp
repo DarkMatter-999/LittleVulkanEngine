@@ -3,8 +3,10 @@
 #include "glm/fwd.hpp"
 #include "glm/gtc/constants.hpp"
 #include "lve_camera.hpp"
+#include "lve_frame_info.hpp"
 #include "lve_game_object.hpp"
 #include "lve_renderer.hpp"
+#include "lve_buffer.hpp"
 #include "lve_render_system.hpp"
 #include "lve_input.hpp"
 #include "vulkan/vulkan_core.h"
@@ -13,12 +15,18 @@
 #include <stdexcept>
 #include <array>
 #include <chrono>
+#include <numeric>
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 namespace lve {
+
+struct GlobalUbo {
+	glm::mat4 projectionView{1.0f};
+	glm::vec3 lightDirection = glm::normalize(glm::vec3{1.0f, -3.0f, -1.0f});
+};
 
 LveApp::LveApp() {
 	loadGameObjects();
@@ -27,6 +35,18 @@ LveApp::LveApp() {
 LveApp::~LveApp() { }
 
 void LveApp::run() {
+std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_FLIGHT);
+	for (int i = 0; i < uboBuffers.size(); i++) {
+		uboBuffers[i] = std::make_unique<LveBuffer>(
+			lveDevice,
+			sizeof(GlobalUbo),
+			1,
+			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+
+		uboBuffers[i]->map();
+	}
+
 	LveRenderSystem simpleRenderSystem{lveDevice, lveRenderer.getSwapChainRenderPass()};
 	LveCamera camera{};
 
@@ -50,8 +70,24 @@ void LveApp::run() {
 		camera.setPerspectiveProjection(50.0f, aspect, 0.1f, 10.0f);
 		
 		if (auto commandBuffer = lveRenderer.beginFrame()) {
+			int frameIndex = lveRenderer.getFrameIndex();
+
+			FrameInfo frameInfo {
+				frameIndex,
+				frameTime,
+				commandBuffer,
+				camera,
+			};
+
+			// Update
+			GlobalUbo ubo{};
+			ubo.projectionView = camera.getProjection() * camera.getView();
+			uboBuffers[frameIndex]->writeToBuffer(&ubo);
+			uboBuffers[frameIndex]->flush();
+
+			// Render
 			lveRenderer.beginSwapChainRenderPass(commandBuffer);
-			simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+			simpleRenderSystem.renderGameObjects(frameInfo, gameObjects, camera);
 			lveRenderer.endSwapChainRenderPass(commandBuffer);
 			lveRenderer.endFrame();
 		}
