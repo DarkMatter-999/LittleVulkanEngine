@@ -5,6 +5,7 @@
 #include "lve_game_object.hpp"
 #include "lve_device.hpp"
 #include "lve_renderer.hpp"
+#include "lve_descriptors.hpp"
 #include "vulkan/vulkan_core.h"
 
 #include <memory>
@@ -33,6 +34,7 @@ private:
 
 	LveRenderer lveRenderer{lveWindow, lveDevice};
 	std::vector<LveGameObject> gameObjects;
+	std::unique_ptr<LveDescriptorPool> globalPool{};
 };
 
 }

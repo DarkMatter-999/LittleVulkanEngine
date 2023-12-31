@@ -16,7 +16,7 @@ namespace lve {
 
 class LveRenderSystem {
 public:
-	LveRenderSystem(LveDevice& device, VkRenderPass renderPass);
+	LveRenderSystem(LveDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 	~LveRenderSystem();
 
 	LveRenderSystem(const LveRenderSystem&) = delete;
@@ -24,7 +24,7 @@ public:
 
 	void renderGameObjects(FrameInfo& frameInfo, std::vector<LveGameObject>& gameObjects, const LveCamera &camera);
 private:
-	void createPipelineLayout();
+	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 	void createPipeline(VkRenderPass renderPass);
 	
 	LveDevice& lveDevice;
