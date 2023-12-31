@@ -25,7 +25,9 @@ namespace lve {
 
 struct GlobalUbo {
 	glm::mat4 projectionView{1.0f};
-	glm::vec3 lightDirection = glm::normalize(glm::vec3{1.0f, -3.0f, -1.0f});
+	glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.02f};
+	glm::vec3 lightPosition{-1.0f};
+	alignas(16) glm::vec4 lightColor{1.0f};
 };
 
 LveApp::LveApp() {
@@ -78,7 +80,7 @@ std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_F
 		
 		float aspect = lveRenderer.getAspectRatio();
 		// camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-		camera.setPerspectiveProjection(50.0f, aspect, 0.1f, 10.0f);
+		camera.setPerspectiveProjection(glm::radians(50.0f), aspect, 0.1f, 100.0f);
 		
 		if (auto commandBuffer = lveRenderer.beginFrame()) {
 			int frameIndex = lveRenderer.getFrameIndex();
@@ -110,12 +112,27 @@ std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_F
 
 
 void LveApp::loadGameObjects() {
-	std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/suzzane.obj");
-	auto model = LveGameObject::createGameObject();
-	model.model = lveModel;
-	model.transform.translation = {.0f, .0f, 4.5f};
-	model.transform.scale = {.5f, .5f, .5f};
+	std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice, "models/flat_vase.obj");
+	auto flatVase = LveGameObject::createGameObject();
+	flatVase.model = lveModel;
+	flatVase.transform.translation = {-.5f, .5f, 2.5f};
+	flatVase.transform.translation = {-.5f, .5f, 0.f};
+	flatVase.transform.scale = {3.f, 1.5f, 3.f};
+	gameObjects.push_back(std::move(flatVase));
 
-	gameObjects.push_back(std::move(model));
+	lveModel = LveModel::createModelFromFile(lveDevice, "models/smooth_vase.obj");
+	auto smoothVase = LveGameObject::createGameObject();
+	smoothVase.model = lveModel;
+	smoothVase.transform.translation = {.5f, .5f, 2.5f};
+	smoothVase.transform.translation = {.5f, .5f, 0.f};
+	smoothVase.transform.scale = {3.f, 1.5f, 3.f};
+	gameObjects.push_back(std::move(smoothVase));
+
+	lveModel = LveModel::createModelFromFile(lveDevice, "models/quad.obj");
+	auto floor = LveGameObject::createGameObject();
+	floor.model = lveModel;
+	floor.transform.translation = {0.f, .5f, 0.f};
+	floor.transform.scale = {3.f, 1.f, 3.f};
+	gameObjects.push_back(std::move(floor));
 }
 }
