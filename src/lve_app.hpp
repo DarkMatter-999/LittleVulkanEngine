@@ -33,8 +33,10 @@ private:
 	LveDevice lveDevice{lveWindow};
 
 	LveRenderer lveRenderer{lveWindow, lveDevice};
-	LveGameObject::Map gameObjects;
+
+	// order of declarations matters idk why
 	std::unique_ptr<LveDescriptorPool> globalPool{};
+	LveGameObject::Map gameObjects;
 };
 
 }
