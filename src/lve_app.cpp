@@ -8,6 +8,7 @@
 #include "lve_renderer.hpp"
 #include "lve_buffer.hpp"
 #include "lve_render_system.hpp"
+#include "lve_point_light_system.hpp"
 #include "lve_input.hpp"
 #include "vulkan/vulkan_core.h"
 #include <cstdint>
@@ -24,7 +25,8 @@
 namespace lve {
 
 struct GlobalUbo {
-	glm::mat4 projectionView{1.0f};
+	glm::mat4 projection{1.f};
+	glm::mat4 view{1.f};
 	glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.02f};
 	glm::vec3 lightPosition{-1.0f};
 	alignas(16) glm::vec4 lightColor{1.0f};
@@ -61,6 +63,7 @@ std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_F
 	}
 
 	LveRenderSystem simpleRenderSystem{lveDevice, lveRenderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
+	LvePointLightSystem pointLightSystem{lveDevice, lveRenderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
 	LveCamera camera{};
 
 	auto viewerObject = LveGameObject::createGameObject();
@@ -96,13 +99,15 @@ std::vector<std::unique_ptr<LveBuffer>> uboBuffers(LveSwapChain::MAX_FRAMES_IN_F
 
 			// Update
 			GlobalUbo ubo{};
-			ubo.projectionView = camera.getProjection() * camera.getView();
+			ubo.projection = camera.getProjection();
+			ubo.view = camera.getView();
 			uboBuffers[frameIndex]->writeToBuffer(&ubo);
 			uboBuffers[frameIndex]->flush();
 
 			// Render
 			lveRenderer.beginSwapChainRenderPass(commandBuffer);
 			simpleRenderSystem.renderGameObjects(frameInfo);
+			pointLightSystem.render(frameInfo);
 			lveRenderer.endSwapChainRenderPass(commandBuffer);
 			lveRenderer.endFrame();
 		}
