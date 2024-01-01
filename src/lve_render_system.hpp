@@ -22,7 +22,7 @@ public:
 	LveRenderSystem(const LveRenderSystem&) = delete;
 	LveRenderSystem &operator=(const LveRenderSystem&) = delete;
 
-	void renderGameObjects(FrameInfo& frameInfo, std::vector<LveGameObject>& gameObjects, const LveCamera &camera);
+	void renderGameObjects(FrameInfo& frameInfo);
 private:
 	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 	void createPipeline(VkRenderPass renderPass);

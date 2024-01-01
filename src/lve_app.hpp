@@ -33,7 +33,7 @@ private:
 	LveDevice lveDevice{lveWindow};
 
 	LveRenderer lveRenderer{lveWindow, lveDevice};
-	std::vector<LveGameObject> gameObjects;
+	LveGameObject::Map gameObjects;
 	std::unique_ptr<LveDescriptorPool> globalPool{};
 };
 
