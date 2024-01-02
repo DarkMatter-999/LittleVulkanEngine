@@ -20,6 +20,10 @@ struct TransformComponent {
 
 };
 
+struct PointLightComponent {
+	float lightIntensity = 1.0f;
+};
+
 
 class LveGameObject {
 public:
@@ -38,9 +42,13 @@ public:
 	
 	const id_t getId() { return id;}
 
+	static LveGameObject makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
+
 	std::shared_ptr<LveModel> model{};
 	glm::vec3 color{};
 	TransformComponent transform{};
+
+	std::unique_ptr<PointLightComponent> pointLight = nullptr;
 
 private:
 	LveGameObject(id_t objId): id{objId} {}

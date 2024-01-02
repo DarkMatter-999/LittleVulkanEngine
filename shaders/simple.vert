@@ -14,12 +14,17 @@ layout(push_constant) uniform Push {
 	mat4 normalMatrix;
 } push;
 
-layout(set=0, binding=0) uniform GlobalUbo {
-	mat4 projection;
-	mat4 view;
-	vec4 ambientLightColor;
-	vec3 lightPosition;
-	vec4 lightColor;
+struct PointLight {
+  vec4 position;
+  vec4 color;
+};
+
+layout(set = 0, binding = 0) uniform GlobalUbo {
+  mat4 projection;
+  mat4 view;
+  vec4 ambientLightColor; // w is intensity
+  PointLight pointLights[10];
+  int numLights;
 } ubo;
 
 void main() {

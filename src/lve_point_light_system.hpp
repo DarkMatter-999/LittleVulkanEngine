@@ -21,8 +21,10 @@ public:
 
 	LvePointLightSystem(const LvePointLightSystem&) = delete;
 	LvePointLightSystem &operator=(const LvePointLightSystem&) = delete;
-
+	
+	void update(FrameInfo &frameInfo, GlobalUbo &ubo);
 	void render(FrameInfo& frameInfo);
+
 private:
 	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 	void createPipeline(VkRenderPass renderPass);
