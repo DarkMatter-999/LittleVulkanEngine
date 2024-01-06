@@ -29,7 +29,7 @@ public:
 private:
 	void loadGameObjects();
 
-	LveWindow lveWindow{WIDTH, HEIGHT, "Hello Vulkan!"};
+	LveWindow lveWindow{WIDTH, HEIGHT, "LittleVulkanEngine"};
 	LveDevice lveDevice{lveWindow};
 
 	LveRenderer lveRenderer{lveWindow, lveDevice};

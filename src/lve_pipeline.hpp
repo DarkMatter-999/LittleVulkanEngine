@@ -10,6 +10,7 @@ namespace lve {
 
 struct PipeLineConfigInfo {
 
+	PipeLineConfigInfo() = default;
 	PipeLineConfigInfo(const PipeLineConfigInfo&) = delete;
 	PipeLineConfigInfo& operator=(const PipeLineConfigInfo&) = delete;
 
@@ -40,6 +41,7 @@ public:
 	LvePipeline& operator=(const LvePipeline&) = delete;
 
 	static void defaultPipelineConfigInfo(PipeLineConfigInfo& configInfo);
+	static void enableAlphaBlending(PipeLineConfigInfo& configInfo);
 
 	void bind(VkCommandBuffer commandBuffer);
 
