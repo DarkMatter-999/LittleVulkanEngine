@@ -2,7 +2,7 @@
 
 A small Vulkan-based rendering engine, inspired by [blurrypiano's LittleVulkanEngine](https://github.com/blurrypiano/LittleVulkanEngine). This engine provides a simple and minimal setup for rendering graphics using Vulkan API, aimed at helping me learn the basics of Vulkan while building an engine from scratch.
 
-![Engine Demo](./assets/lvedemo.gif)
+![Engine Demo](./assets/lvedemo.mp4)
 
 ---
 
